@@ -1,0 +1,17 @@
+**/.env
+
+**/.claude
+/.claude
+
+**/.idea
+**/.DS_Store
+Thumbs.db
+**/*.swp
+**/*.log
+
+**/__pycache__
+**/.venv
+**/service-account.json
+
+/setups
+**/keys
