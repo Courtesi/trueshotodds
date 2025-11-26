@@ -15,3 +15,9 @@ Thumbs.db
 
 /setups
 **/keys
+
+# Ignore all markdown files
+*.md
+# Except README.md in root
+!/README.md
+

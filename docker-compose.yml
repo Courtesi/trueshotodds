@@ -14,19 +14,19 @@ services:
     networks:
       - app-network
 
-  fastapi:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: tso-fastapi
+    container_name: tso-backend
     volumes:
       - ./backend/secrets/service-account.json:/app/secrets/service-account.json:ro
     environment:
-      - ENV=prod
+      - ENV=production
       - GOOGLE_APPLICATION_CREDENTIALS=/app/secrets/service-account.json
       - REDIS_HOST=redis
     env_file:
-      - ./backend/.env
+      - ./backend/secrets/.env
     depends_on:
       redis:
         condition: service_healthy
@@ -55,8 +55,7 @@ services:
     networks:
       - app-network
     restart: unless-stopped
-
-  # Frontend React service
+    
   frontend:
     build:
       context: ./frontend
@@ -74,7 +73,7 @@ services:
       - app-network
     restart: unless-stopped
     depends_on:
-      fastapi:
+      backend:
         condition: service_healthy
 
 
