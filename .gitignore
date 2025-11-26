@@ -13,7 +13,7 @@ Thumbs.db
 **/.venv
 **/service-account.json
 
-/setups
+/.setups
 **/keys
 
 # Ignore all markdown files
