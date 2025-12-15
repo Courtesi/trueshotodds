@@ -4,3 +4,6 @@
 [submodule "backend"]
 	path = backend
 	url = https://github.com/Courtesi/tso_backend.git
+[submodule "webscraper"]
+	path = webscraper
+	url = https://github.com/Courtesi/tso_webscraper.git
