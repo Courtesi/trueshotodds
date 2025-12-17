@@ -1,18 +1,232 @@
 services:
-  redis:
-    image: redis:7-alpine
-    container_name: tso-redis
-    ports:
-      - "6379:6379"
+  # ============================================================================
+  # WEBSCRAPER WORKERS - Each sportsbook runs as independent service
+  # ============================================================================
+
+  worker-fliff:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: tso-worker-fliff
+    command: uv run python -m arbfinder.worker.generic_worker --sportsbook fliff --interval ${FLIFF_SI:-10}
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
     volumes:
-      - redis-data:/data
-    command: redis-server --appendonly yes
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      timeout: 10s
-      retries: 5
+      - ./webscraper/logs:/app/logs  # Mount logs to host
     networks:
       - app-network
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.2'
+
+  worker-novig:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: tso-worker-novig
+    command: uv run python -m arbfinder.worker.generic_worker --sportsbook novig --interval ${NOVIG_SI:-10}
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    volumes:
+      - ./webscraper/logs:/app/logs  # Mount logs to host
+    networks:
+      - app-network
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.2'
+
+  worker-prophetx:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: tso-worker-prophetx
+    command: uv run python -m arbfinder.worker.generic_worker --sportsbook prophetx --interval ${PROPHETX_SI:-10}
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    volumes:
+      - ./webscraper/logs:/app/logs  # Mount logs to host
+    networks:
+      - app-network
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.2'
+
+  worker-draftkings:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: tso-worker-draftkings
+    command: uv run python -m arbfinder.worker.generic_worker --sportsbook draftkings --interval ${DRAFTKINGS_SI:-10}
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    volumes:
+      - ./webscraper/logs:/app/logs  # Mount logs to host
+    networks:
+      - app-network
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.2'
+
+  worker-betmgm:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: tso-worker-betmgm
+    command: uv run python -m arbfinder.worker.generic_worker --sportsbook betmgm --interval ${BETMGM_SI:-60}
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    volumes:
+      - ./webscraper/logs:/app/logs  # Mount logs to host
+    networks:
+      - app-network
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M  # BetMGM needs more memory for Playwright browser
+          cpus: '0.5'
+
+  worker-fanduel:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: tso-worker-fanduel
+    command: uv run python -m arbfinder.worker.generic_worker --sportsbook fanduel --interval ${FANDUEL_SI:-10}
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    volumes:
+      - ./webscraper/logs:/app/logs  # Mount logs to host
+    networks:
+      - app-network
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.2'
+
+  worker-caesars:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: tso-worker-caesars
+    command: uv run python -m arbfinder.worker.generic_worker --sportsbook caesars --interval ${CAESARS_SI:-10}
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    volumes:
+      - ./webscraper/logs:/app/logs  # Mount logs to host
+    networks:
+      - app-network
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.2'
+
+  # ============================================================================
+  # ARBFINDER - Main aggregation service
+  # ============================================================================
+
+  arbfinder:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: tso-arbfinder
+    command: uv run python main.py --mode distributed
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    volumes:
+      - ./webscraper/logs:/app/logs  # Mount logs to host
+    networks:
+      - app-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          cpus: '0.5'
+
+  # ============================================================================
+  # WEBSITE LAYERS
+  # ============================================================================
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: https://trueshotodds.com
+    container_name: tso-frontend
+    env_file:
+      - ./frontend/.env
+    environment:
+      VITE_API_URL: https://trueshotodds.com
+    ports:
+      - "5173:3000"
+    networks:
+      - app-network
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.3'
 
   backend:
     build:
@@ -39,244 +253,31 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  # ============================================================================
-  # WEBSCRAPER WORKERS - Each sportsbook runs as independent service
-  # ============================================================================
-
-  worker-fliff:
-    build:
-      context: ./webscraper
-      dockerfile: Dockerfile
-    container_name: tso-worker-fliff
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook fliff --interval ${FLIFF_SI:-10}
-    depends_on:
-      redis:
-        condition: service_healthy
-    environment:
-      - REDIS_HOST=redis
-    env_file:
-      - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
-    networks:
-      - app-network
-    # restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
-
-  worker-novig:
-    build:
-      context: ./webscraper
-      dockerfile: Dockerfile
-    container_name: tso-worker-novig
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook novig --interval ${NOVIG_SI:-10}
-    depends_on:
-      redis:
-        condition: service_healthy
-    environment:
-      - REDIS_HOST=redis
-    env_file:
-      - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
-    networks:
-      - app-network
-    # restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
-
-  worker-prophetx:
-    build:
-      context: ./webscraper
-      dockerfile: Dockerfile
-    container_name: tso-worker-prophetx
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook prophetx --interval ${PROPHETX_SI:-10}
-    depends_on:
-      redis:
-        condition: service_healthy
-    environment:
-      - REDIS_HOST=redis
-    env_file:
-      - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
-    networks:
-      - app-network
-    # restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
-
-  worker-draftkings:
-    build:
-      context: ./webscraper
-      dockerfile: Dockerfile
-    container_name: tso-worker-draftkings
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook draftkings --interval ${DRAFTKINGS_SI:-10}
-    depends_on:
-      redis:
-        condition: service_healthy
-    environment:
-      - REDIS_HOST=redis
-    env_file:
-      - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
-    networks:
-      - app-network
-    # restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
-
-  worker-betmgm:
-    build:
-      context: ./webscraper
-      dockerfile: Dockerfile
-    container_name: tso-worker-betmgm
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook betmgm --interval ${BETMGM_SI:-60}
-    depends_on:
-      redis:
-        condition: service_healthy
-    environment:
-      - REDIS_HOST=redis
-    env_file:
-      - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
-    networks:
-      - app-network
-    # restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 512M  # BetMGM needs more memory for Playwright browser
-          cpus: '1.0'
-
-  worker-fanduel:
-    build:
-      context: ./webscraper
-      dockerfile: Dockerfile
-    container_name: tso-worker-fanduel
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook fanduel --interval ${FANDUEL_SI:-10}
-    depends_on:
-      redis:
-        condition: service_healthy
-    environment:
-      - REDIS_HOST=redis
-    env_file:
-      - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
-    networks:
-      - app-network
-    # restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
-
-  worker-caesars:
-    build:
-      context: ./webscraper
-      dockerfile: Dockerfile
-    container_name: tso-worker-caesars
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook caesars --interval ${CAESARS_SI:-10}
-    depends_on:
-      redis:
-        condition: service_healthy
-    environment:
-      - REDIS_HOST=redis
-    env_file:
-      - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
-    networks:
-      - app-network
-    # restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
-
-  # ============================================================================
-  # ARBFINDER - Main aggregation service
-  # ============================================================================
-
-  arbfinder:
-    build:
-      context: ./webscraper
-      dockerfile: Dockerfile
-    container_name: tso-arbfinder
-    command: uv run python main.py --mode distributed
-    depends_on:
-      redis:
-        condition: service_healthy
-      worker-fliff:
-        condition: service_started
-      worker-novig:
-        condition: service_started
-      worker-prophetx:
-        condition: service_started
-      worker-draftkings:
-        condition: service_started
-      worker-betmgm:
-        condition: service_started
-      worker-fanduel:
-        condition: service_started
-      worker-caesars:
-        condition: service_started
-    environment:
-      - REDIS_HOST=redis
-    env_file:
-      - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
-    networks:
-      - app-network
-    restart: unless-stopped
     deploy:
       resources:
         limits:
           memory: 512M
-          cpus: '1.0'
+          cpus: '0.5'
 
-  # ============================================================================
-  # FRONTEND
-  # ============================================================================
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        VITE_API_URL: https://trueshotodds.com
-    container_name: tso-frontend
-    env_file:
-      - ./frontend/.env
-    environment:
-      VITE_API_URL: https://trueshotodds.com
+  redis:
+    image: redis:7-alpine
+    container_name: tso-redis
     ports:
-      - "5173:3000"
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 10s
+      retries: 5
     networks:
       - app-network
-    restart: unless-stopped
-    depends_on:
-      backend:
-        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.2'
 
 volumes:
   redis-data:
