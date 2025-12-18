@@ -168,7 +168,7 @@ services:
       context: ./webscraper
       dockerfile: Dockerfile
     container_name: tso-arbfinder
-    command: uv run python main.py --mode distributed
+    command: uv run python main.py
     depends_on:
       redis:
         condition: service_healthy
