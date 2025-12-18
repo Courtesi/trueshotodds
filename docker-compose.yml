@@ -283,7 +283,19 @@ services:
       DOZZLE_AUTH_HEADER_EMAIL: trueshotodds@gmail.com
       DOZZLE_AUTH_HEADER_NAME: trueshotodds@gmail.com
     restart: unless-stopped
-      
+    networks:
+      - app-network
+
+  cloudflared:
+    container_name: tso-cloudflared
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - app-network
+    restart: unless-stopped
+
 volumes:
   redis-data:
     driver: local
