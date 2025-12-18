@@ -103,6 +103,8 @@ services:
     build:
       context: ./webscraper
       dockerfile: Dockerfile
+      args:
+        INSTALL_PLAYWRIGHT: "true"
     container_name: tso-worker-betmgm
     command: uv run python -m arbfinder.worker.generic_worker --sportsbook betmgm --interval ${BETMGM_SI:-60}
     depends_on:
