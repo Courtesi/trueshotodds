@@ -16,8 +16,6 @@ services:
       - REDIS_HOST=redis
     env_file:
       - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
     networks:
       - app-network
     # restart: unless-stopped
@@ -40,8 +38,6 @@ services:
       - REDIS_HOST=redis
     env_file:
       - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
     networks:
       - app-network
     # restart: unless-stopped
@@ -64,8 +60,6 @@ services:
       - REDIS_HOST=redis
     env_file:
       - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
     networks:
       - app-network
     # restart: unless-stopped
@@ -88,8 +82,6 @@ services:
       - REDIS_HOST=redis
     env_file:
       - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
     networks:
       - app-network
     # restart: unless-stopped
@@ -114,8 +106,6 @@ services:
       - REDIS_HOST=redis
     env_file:
       - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
     networks:
       - app-network
     # restart: unless-stopped
@@ -138,8 +128,6 @@ services:
       - REDIS_HOST=redis
     env_file:
       - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
     networks:
       - app-network
     # restart: unless-stopped
@@ -162,8 +150,6 @@ services:
       - REDIS_HOST=redis
     env_file:
       - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
     networks:
       - app-network
     # restart: unless-stopped
@@ -190,8 +176,6 @@ services:
       - REDIS_HOST=redis
     env_file:
       - ./webscraper/.env
-    volumes:
-      - ./webscraper/logs:/app/logs  # Mount logs to host
     networks:
       - app-network
     restart: unless-stopped
@@ -261,6 +245,10 @@ services:
           memory: 512M
           cpus: '0.2'
 
+  # ============================================================================
+  # SUPPORTING SERVICES
+  # ============================================================================
+
   redis:
     image: redis:7-alpine
     container_name: tso-redis
@@ -280,7 +268,18 @@ services:
         limits:
           memory: 256M
           cpus: '0.2'
-
+  
+  dozzle:
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /data:/data
+    ports:
+      - 9001:8080
+    environment:
+      DOZZLE_AUTH_PROVIDER: simple
+      DOZZLE_AUTH_TTL: 48h
+      
 volumes:
   redis-data:
     driver: local

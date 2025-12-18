@@ -21,3 +21,5 @@ Thumbs.db
 # Except README.md in root
 !/README.md
 
+# Ignore secrets
+/data
