@@ -7,7 +7,7 @@ services:
     build:
       context: ./webscraper
       dockerfile: Dockerfile
-    container_name: tso-worker-fliff
+    container_name: worker-fliff
     command: uv run python -m arbfinder.worker.generic_worker --sportsbook fliff --interval ${FLIFF_SI}
     depends_on:
       redis:
@@ -29,7 +29,7 @@ services:
     build:
       context: ./webscraper
       dockerfile: Dockerfile
-    container_name: tso-worker-novig
+    container_name: worker-novig
     command: uv run python -m arbfinder.worker.generic_worker --sportsbook novig --interval ${NOVIG_SI}
     depends_on:
       redis:
@@ -51,7 +51,7 @@ services:
     build:
       context: ./webscraper
       dockerfile: Dockerfile
-    container_name: tso-worker-prophetx
+    container_name: worker-prophetx
     command: uv run python -m arbfinder.worker.generic_worker --sportsbook prophetx --interval ${PROPHETX_SI}
     depends_on:
       redis:
@@ -73,7 +73,7 @@ services:
     build:
       context: ./webscraper
       dockerfile: Dockerfile
-    container_name: tso-worker-draftkings
+    container_name: worker-draftkings
     command: uv run python -m arbfinder.worker.generic_worker --sportsbook draftkings --interval ${DRAFTKINGS_SI}
     depends_on:
       redis:
@@ -97,7 +97,7 @@ services:
       dockerfile: Dockerfile
       args:
         INSTALL_PLAYWRIGHT: "true"
-    container_name: tso-worker-betmgm
+    container_name: worker-betmgm
     command: uv run python -m arbfinder.worker.generic_worker --sportsbook betmgm --interval ${BETMGM_SI:-60}
     depends_on:
       redis:
@@ -119,7 +119,7 @@ services:
     build:
       context: ./webscraper
       dockerfile: Dockerfile
-    container_name: tso-worker-fanduel
+    container_name: worker-fanduel
     command: uv run python -m arbfinder.worker.generic_worker --sportsbook fanduel --interval ${FANDUEL_SI}
     depends_on:
       redis:
@@ -141,7 +141,7 @@ services:
     build:
       context: ./webscraper
       dockerfile: Dockerfile
-    container_name: tso-worker-caesars
+    container_name: worker-caesars
     command: uv run python -m arbfinder.worker.generic_worker --sportsbook caesars --interval ${CAESARS_SI}
     depends_on:
       redis:
@@ -205,8 +205,6 @@ services:
         VITE_PUBLIC_POSTHOG_KEY: ${VITE_PUBLIC_POSTHOG_KEY}
         VITE_PUBLIC_POSTHOG_HOST: ${VITE_PUBLIC_POSTHOG_HOST}
     container_name: tso-frontend
-    env_file:
-      - ./frontend/.env
     environment:
       - ENV=production
       - VITE_API_URL=https://trueshotodds.com
@@ -286,7 +284,6 @@ services:
     container_name: tso-dozzle
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./data:/data
     ports:
       - 8080
     environment:
