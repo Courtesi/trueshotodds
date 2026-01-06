@@ -43,14 +43,15 @@ Each service is maintained in its own Git repository as a submodule.
 2. **Set up environment files**:
    ```bash
    # Backend
-   cp backend/secrets/.env.example backend/secrets/.env
-   # Edit backend/secrets/.env with your credentials
+   cp backend/.env.example backend/.env
+   # Edit backend/.env with your credentials
+   # Firebase service account details below
 
    # Webscraper
    cp webscraper/.env.example webscraper/.env
    # Edit webscraper/.env with your configuration
 
-   # Frontend
+   # Frontend (In prod, should move .env variables in frontend/ to root because variables need to be available at buildtime, not just runtime)
    cp frontend/.env.example frontend/.env
    # Edit frontend/.env with your configuration
    ```
@@ -58,14 +59,14 @@ Each service is maintained in its own Git repository as a submodule.
 3. **Add Firebase credentials**:
    ```bash
    # Place your Firebase service account JSON
-   cp /path/to/service-account.json backend/secrets/service-account.json
+   cp /path/to/service-account.json backend/service-account.json
    ```
 
 ### Running with Docker
 
 **Production mode**:
 ```bash
-docker-compose up
+docker compose up
 ```
 
 This starts:
@@ -77,13 +78,13 @@ This starts:
 **Development mode** (individual services):
 ```bash
 # Backend only
-docker-compose up backend redis
+docker compose up backend redis
 
 # Webscraper only
-docker-compose up webscraper redis
+docker compose up webscraper redis
 
 # Frontend only
-docker-compose up frontend
+docker compose up frontend
 ```
 
 ### Running Locally (Development)
@@ -123,7 +124,7 @@ npm run dev
 
 **Tech**: Python 3.11, FastAPI, Redis, Firebase, Stripe
 
-[Backend Documentation](./backend/README.md)
+[Backend Documentation](https://github.com/Courtesi/tso_backend/blob/main/README.md)
 
 ### Webscraper
 - Real-time arbitrage detection across multiple sportsbooks
@@ -133,7 +134,7 @@ npm run dev
 
 **Tech**: Python 3.11, Redis, Multi-threaded scraping
 
-[Webscraper Documentation](./webscraper/README.md)
+[Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/main/README.md)
 
 ### Frontend
 - Modern React-based UI
@@ -143,7 +144,7 @@ npm run dev
 
 **Tech**: React, Vite, TypeScript
 
-[Frontend Documentation](./frontend/README.md)
+[Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/main/README.md)
 
 ## Architecture
 
@@ -205,6 +206,11 @@ git commit -m "chore: update all submodules to latest"
 git push
 ```
 
+```bash
+# Sync changes (overwriting your own) to the latest commits
+git pull --recurse-submodules
+```
+
 ### Pre-commit Hooks
 
 Both backend and webscraper use pre-commit hooks for:
@@ -216,7 +222,7 @@ Set up hooks in each submodule:
 cd backend
 uv run pre-commit install
 
-cd ../webscraper
+cd webscraper
 uv run pre-commit install
 ```
 
@@ -247,19 +253,19 @@ See individual service README files for detailed configuration.
 
 ```bash
 # Build and start all services
-docker-compose up --build -d
+docker compose up --build -d
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Stop all services
-docker-compose down
+docker compose down
 ```
 
 ### Health Checks
 
-- Backend: `http://localhost:8000/api/python/health`
-- Redis: Automatic health checks in docker-compose
+- Backend: `http://localhost:8000/api/health`
+- Redis: Automatic health checks in docker compose
 
 ## Contributing
 
@@ -280,17 +286,17 @@ git submodule update
 ### Docker services not starting
 ```bash
 # Check logs
-docker-compose logs <service-name>
+docker compose logs <service-name>
 
 # Rebuild containers
-docker-compose down
-docker-compose up --build
+docker compose down
+docker compose up --build
 ```
 
 ### Redis connection issues
 ```bash
 # Ensure Redis is running
-docker-compose up redis
+docker compose up redis
 
 # Check Redis health
 docker exec tso-redis redis-cli ping
@@ -298,10 +304,9 @@ docker exec tso-redis redis-cli ping
 
 ## Documentation
 
-- [Backend API Documentation](./backend/README.md)
-- [Webscraper Documentation](./webscraper/README.md)
-- [Frontend Documentation](./frontend/README.md)
-- [Submodule Workflow Guide](./submodules.md)
+- [Backend API Documentation](https://github.com/Courtesi/tso_backend/blob/main/README.md)
+- [Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/main/README.md)
+- [Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/main/README.md)
 
 ## License
 
