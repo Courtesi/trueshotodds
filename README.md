@@ -134,7 +134,7 @@ npm run dev
 
 **Tech**: Python 3.11, Redis, Multi-threaded scraping
 
-[Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/bfa1721ff2f675e1319b8245ab38f15711391e6f/README.md)
+[Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/15906992347fb396a7dbfd4655abe9e29689797a/README.md)
 
 ### Frontend
 - Modern React-based UI
@@ -305,7 +305,7 @@ docker exec tso-redis redis-cli ping
 ## Documentation
 
 - [Backend API Documentation](https://github.com/Courtesi/tso_backend/blob/a341b34adfaac8baa68371836c4e4d2ec0eb6127/README.md)
-- [Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/bfa1721ff2f675e1319b8245ab38f15711391e6f/README.md)
+- [Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/15906992347fb396a7dbfd4655abe9e29689797a/README.md)
 - [Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/14da8d9be025a8bffc238de1800cb062a2d305c2/README.md)
 
 ## License
