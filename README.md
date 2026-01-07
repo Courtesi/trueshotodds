@@ -124,7 +124,7 @@ npm run dev
 
 **Tech**: Python 3.11, FastAPI, Redis, Firebase, Stripe
 
-[Backend Documentation](https://github.com/Courtesi/tso_backend/blob/main/README.md)
+[Backend Documentation](https://github.com/Courtesi/tso_backend/blob/a341b34adfaac8baa68371836c4e4d2ec0eb6127/README.md)
 
 ### Webscraper
 - Real-time arbitrage detection across multiple sportsbooks
@@ -134,7 +134,7 @@ npm run dev
 
 **Tech**: Python 3.11, Redis, Multi-threaded scraping
 
-[Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/main/README.md)
+[Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/bfa1721ff2f675e1319b8245ab38f15711391e6f/README.md)
 
 ### Frontend
 - Modern React-based UI
@@ -144,7 +144,7 @@ npm run dev
 
 **Tech**: React, Vite, TypeScript
 
-[Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/main/README.md)
+[Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/14da8d9be025a8bffc238de1800cb062a2d305c2/README.md)
 
 ## Architecture
 
@@ -304,9 +304,9 @@ docker exec tso-redis redis-cli ping
 
 ## Documentation
 
-- [Backend API Documentation](https://github.com/Courtesi/tso_backend/blob/main/README.md)
-- [Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/main/README.md)
-- [Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/main/README.md)
+- [Backend API Documentation](https://github.com/Courtesi/tso_backend/blob/a341b34adfaac8baa68371836c4e4d2ec0eb6127/README.md)
+- [Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/bfa1721ff2f675e1319b8245ab38f15711391e6f/README.md)
+- [Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/14da8d9be025a8bffc238de1800cb062a2d305c2/README.md)
 
 ## License
 
