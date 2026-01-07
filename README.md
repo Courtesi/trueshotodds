@@ -144,7 +144,7 @@ npm run dev
 
 **Tech**: React, Vite, TypeScript
 
-[Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/927ad1f9bec944c7ef616d7a4ae3927d4eb85839/README.md)
+[Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/64289332ba971e7364f56ca85a0fe31de7a42e84/README.md)
 
 ## Architecture
 
@@ -306,7 +306,7 @@ docker exec tso-redis redis-cli ping
 
 - [Backend API Documentation](https://github.com/Courtesi/tso_backend/blob/09c415410a05298aa6d78a7d111e4961792cc0cc/README.md)
 - [Webscraper Documentation](https://github.com/Courtesi/tso_webscraper/blob/eab5d3a79b46012a3c95ac87b673bb275a329982/README.md)
-- [Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/927ad1f9bec944c7ef616d7a4ae3927d4eb85839/README.md)
+- [Frontend Documentation](https://github.com/Courtesi/tso_frontend/blob/64289332ba971e7364f56ca85a0fe31de7a42e84/README.md)
 
 ## License
 
