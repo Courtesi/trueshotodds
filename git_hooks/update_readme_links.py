@@ -57,13 +57,14 @@ def parse_gitmodules() -> dict[str, str]:
 
 def get_submodule_commit(submodule_path: str) -> str:
     """Get the commit hash that the parent repo is tracking for a submodule."""
-    # Use git ls-tree to get the commit hash that the parent repo tracks
-    output = run_command(["git", "ls-tree", "HEAD", submodule_path])
+    # Use git ls-files to read from staging area (index), not HEAD
+    # This ensures we get the NEW commit hash that was just staged
+    output = run_command(["git", "ls-files", "-s", submodule_path])
     if output:
-        # Format: <mode> <type> <hash>\t<path>
+        # Format: <mode> <hash> <stage>\t<path>
         parts = output.split()
-        if len(parts) >= 3:
-            return parts[2]  # The commit hash
+        if len(parts) >= 2:
+            return parts[1]  # The commit hash
     return ""
 
 
