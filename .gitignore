@@ -15,14 +15,12 @@ Thumbs.db
 **/service-account.json
 
 /.setups
+/.scripts
 **/keys
 
 # Ignore all markdown files
 *.md
 # Except README.md in root
 !/README.md
-
-# Ignore secrets
-/data
 
 **.sh
