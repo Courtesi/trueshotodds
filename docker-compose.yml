@@ -158,6 +158,28 @@ services:
         limits:
           memory: 128M
           cpus: '0.1'
+  
+  worker-kalshi:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: worker-kalshi
+    command: uv run python -m arbfinder.worker.generic_worker --sportsbook kalshi --interval ${KALSHI_SI}
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    networks:
+      - app-network
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.1'
 
   # ============================================================================
   # ARBFINDER - Main aggregation service
@@ -236,7 +258,7 @@ services:
     env_file:
       - ./backend/.env
     ports:
-      - "8000:8000"
+      - 8000
     depends_on:
       redis:
         condition: service_healthy
