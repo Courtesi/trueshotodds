@@ -181,6 +181,28 @@ services:
           memory: 128M
           cpus: '0.1'
 
+  worker-polymarket:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: worker-polymarket
+    command: uv run python -m arbfinder.worker.generic_worker --sportsbook polymarket --interval ${POLYMARKET_SI}
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    networks:
+      - app-network
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.1'
+
   # ============================================================================
   # ARBFINDER - Main aggregation service
   # ============================================================================
