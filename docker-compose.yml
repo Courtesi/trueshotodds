@@ -98,7 +98,7 @@ services:
       args:
         INSTALL_PLAYWRIGHT: "true"
     container_name: worker-betmgm
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook betmgm --interval ${BETMGM_SI:-60}
+    command: uv run python -m arbfinder.worker.generic_worker --sportsbook betmgm --interval ${BETMGM_SI}
     depends_on:
       redis:
         condition: service_healthy
