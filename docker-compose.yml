@@ -8,7 +8,7 @@ services:
       context: ./webscraper
       dockerfile: Dockerfile
     container_name: worker-fliff
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook fliff --interval ${FLIFF_SI}
+    command: uv run python -m odds_scraper.worker.generic_worker --sportsbook fliff --interval ${FLIFF_SI}
     depends_on:
       redis:
         condition: service_healthy
@@ -30,7 +30,7 @@ services:
       context: ./webscraper
       dockerfile: Dockerfile
     container_name: worker-novig
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook novig --interval ${NOVIG_SI}
+    command: uv run python -m odds_scraper.worker.generic_worker --sportsbook novig --interval ${NOVIG_SI}
     depends_on:
       redis:
         condition: service_healthy
@@ -52,7 +52,7 @@ services:
       context: ./webscraper
       dockerfile: Dockerfile
     container_name: worker-prophetx
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook prophetx --interval ${PROPHETX_SI}
+    command: uv run python -m odds_scraper.worker.generic_worker --sportsbook prophetx --interval ${PROPHETX_SI}
     depends_on:
       redis:
         condition: service_healthy
@@ -74,7 +74,7 @@ services:
       context: ./webscraper
       dockerfile: Dockerfile
     container_name: worker-draftkings
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook draftkings --interval ${DRAFTKINGS_SI}
+    command: uv run python -m odds_scraper.worker.generic_worker --sportsbook draftkings --interval ${DRAFTKINGS_SI}
     depends_on:
       redis:
         condition: service_healthy
@@ -98,7 +98,7 @@ services:
       args:
         INSTALL_PLAYWRIGHT: "true"
     container_name: worker-betmgm
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook betmgm --interval ${BETMGM_SI}
+    command: uv run python -m odds_scraper.worker.generic_worker --sportsbook betmgm --interval ${BETMGM_SI}
     depends_on:
       redis:
         condition: service_healthy
@@ -120,7 +120,7 @@ services:
       context: ./webscraper
       dockerfile: Dockerfile
     container_name: worker-fanduel
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook fanduel --interval ${FANDUEL_SI}
+    command: uv run python -m odds_scraper.worker.generic_worker --sportsbook fanduel --interval ${FANDUEL_SI}
     depends_on:
       redis:
         condition: service_healthy
@@ -142,7 +142,7 @@ services:
       context: ./webscraper
       dockerfile: Dockerfile
     container_name: worker-caesars
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook caesars --interval ${CAESARS_SI}
+    command: uv run python -m odds_scraper.worker.generic_worker --sportsbook caesars --interval ${CAESARS_SI}
     depends_on:
       redis:
         condition: service_healthy
@@ -164,7 +164,7 @@ services:
       context: ./webscraper
       dockerfile: Dockerfile
     container_name: worker-kalshi
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook kalshi --interval ${KALSHI_SI}
+    command: uv run python -m odds_scraper.worker.generic_worker --sportsbook kalshi --interval ${KALSHI_SI}
     depends_on:
       redis:
         condition: service_healthy
@@ -186,7 +186,7 @@ services:
       context: ./webscraper
       dockerfile: Dockerfile
     container_name: worker-polymarket
-    command: uv run python -m arbfinder.worker.generic_worker --sportsbook polymarket --interval ${POLYMARKET_SI}
+    command: uv run python -m odds_scraper.worker.generic_worker --sportsbook polymarket --interval ${POLYMARKET_SI}
     depends_on:
       redis:
         condition: service_healthy
