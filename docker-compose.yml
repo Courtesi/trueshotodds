@@ -204,14 +204,40 @@ services:
           cpus: '0.1'
 
   # ============================================================================
-  # ARBFINDER - Main aggregation service
+  # MOCK WORKER - Simulates all workers with mock data (dev/testing only)
   # ============================================================================
 
-  arbfinder:
+  worker-mock:
     build:
       context: ./webscraper
       dockerfile: Dockerfile
-    container_name: tso-arbfinder
+    container_name: worker-mock
+    command: uv run python -m odds_scraper.worker.mock_worker --interval 10
+    profiles: ["mock"]
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.1'
+
+  # ============================================================================
+  # ENGINE - Main aggregation service
+  # ============================================================================
+
+  engine:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: tso-engine
     command: uv run python main.py
     depends_on:
       redis:
