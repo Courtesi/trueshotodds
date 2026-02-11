@@ -289,7 +289,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 1G
           cpus: '0.1'
 
   backend:
@@ -306,7 +306,7 @@ services:
     env_file:
       - ./backend/.env
     ports:
-      - 8000
+      - "8000:8000"
     depends_on:
       redis:
         condition: service_healthy
@@ -322,7 +322,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 512M
+          memory: 1G
           cpus: '0.2'
 
   # ============================================================================
@@ -347,7 +347,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 512M
+          memory: 1G
           cpus: '0.2'
   
   dozzle:
