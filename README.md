@@ -1,4 +1,4 @@
-# TrueShot Odds
+# TrueShotOdds
 
 Sports arbitrage betting platform that identifies and analyzes arbitrage opportunities across multiple sportsbooks in real-time.
 
