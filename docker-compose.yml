@@ -158,6 +158,28 @@ services:
         limits:
           memory: 128M
           cpus: '0.1'
+
+  worker-betrivers:
+    build:
+      context: ./webscraper
+      dockerfile: Dockerfile
+    container_name: worker-betrivers
+    command: uv run python -m odds_scraper.worker.generic_worker --sportsbook betrivers --interval ${BETRIVERS_SI}
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+    env_file:
+      - ./webscraper/.env
+    networks:
+      - app-network
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.1'
   
   worker-kalshi:
     build:
@@ -242,8 +264,11 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+      timescaledb:
+        condition: service_healthy
     environment:
       - REDIS_HOST=redis
+      - TIMESCALE_HOST=timescaledb
     env_file:
       - ./webscraper/.env
     networks:
@@ -303,12 +328,15 @@ services:
       - ENV=production
       - GOOGLE_APPLICATION_CREDENTIALS=/app/service-account.json
       - REDIS_HOST=redis
+      - TIMESCALE_HOST=timescaledb
     env_file:
       - ./backend/.env
     ports:
       - "8000:8000"
     depends_on:
       redis:
+        condition: service_healthy
+      timescaledb:
         condition: service_healthy
     networks:
       - app-network
@@ -328,6 +356,32 @@ services:
   # ============================================================================
   # SUPPORTING SERVICES
   # ============================================================================
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: tso-timescaledb
+    environment:
+      POSTGRES_DB: trueshot
+      POSTGRES_USER: trueshot
+      POSTGRES_PASSWORD: ${TIMESCALE_PASSWORD}
+    volumes:
+      - timescaledb-data:/var/lib/postgresql/data
+      - ./init-timescale.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trueshot -d trueshot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.3'
 
   redis:
     image: redis:7-alpine
@@ -378,6 +432,8 @@ services:
 
 volumes:
   redis-data:
+    driver: local
+  timescaledb-data:
     driver: local
 
 networks:
