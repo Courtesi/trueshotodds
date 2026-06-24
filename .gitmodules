@@ -1,9 +1,6 @@
-[submodule "frontend"]
-	path = frontend
-	url = https://github.com/Courtesi/tso_frontend.git
-[submodule "backend"]
-	path = backend
-	url = https://github.com/Courtesi/tso_backend.git
-[submodule "webscraper"]
-	path = webscraper
-	url = https://github.com/Courtesi/tso_webscraper.git
+[submodule "tso_client"]
+	path = tso_client
+	url = https://github.com/Courtesi/tso_client.git
+[submodule "tso_server"]
+	path = tso_server
+	url = https://github.com/Courtesi/tso_server.git
