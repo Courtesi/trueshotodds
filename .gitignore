@@ -22,5 +22,6 @@ Thumbs.db
 *.md
 # Except README.md in root
 !/README.md
+!/CLAUDE.md
 
 **.sh
